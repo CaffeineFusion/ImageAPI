@@ -2,6 +2,7 @@
 const url = require('url');
 //const uuid = require('uuidv4');
 const request = require('request');
+const path = require('path');
 //const rp = require('request-promise');
 
 const config = require('./config.json');
@@ -46,52 +47,64 @@ function uploadByURL(url, bucket, fileName) {
 		.catch((error) => { return { error }; }); // TODO: Add more detailed error handling. - statusCode etc.
 }
 
-function upload(url, fileName) {
-	return uploadByURL(url, storage.bucket(config.bucket_name), fileName);
+function upload(url) {
+	return uploadByURL(url, storage.bucket(config.bucket_name), path.basename(url));
 }
+
 
 /**
- *
- * TODO: refactor to adapt based on content-type
+ * Returns a Promise which resolves to a Signed URL to access the uploaded file
+ * TODO: set expiry date to match the bucket's expiry rules for files
  */
-function getImage(req, res) {
-
-	res.status(200).send();
+function getURL(fileName, bucket) {
+	let file = bucket.file(fileName);
+	return new Promise((resolve, reject) => {
+		file.getSignedUrl({action:'read', expires:'01-01-2020'}, function(err, url) {
+			if (err) reject(err);
+			else resolve(url);
+		});
+	});
 }
 
-/*
-	switch (req.get('content-type')) {
+function getImage(fileName, contentType) {
+	switch (contentType) {
 		case 'application/JSON':
-			break;
-		case 'image/jpeg':
+			return getURL(fileName, storage.bucket(config.bucket_name));
+		/*case 'image/jpeg':
 			break;
 		case 'image/png':
-			break;
+			break;*/
 	}
- */
+}
 
-// Lambdas
 /**
  * images - /images webhook.
  */
 exports.images = (req, res) => {
-	if(!res.body.urls) res.status(400).json({error:'noURLs', message:'No URLs were provided.'});
-	let urls = res.body.urls;
+	if(req.method == 'PUT' && !req.body.urls) res.status(400).json({error:'noURLs', message:'No URLs were provided.'});
+	if(req.method == 'GET' && !req.body.filename) res.status(400).json({error:'noImageName', message:'No Image Name was provided'});
+	let urls = req.body.urls;
+	let fileName = req.body.filename;
+
 	switch(req.method) {
-		case 'POST':
+		case 'PUT':
 			// For each URL, verify, upload it, then aggregate the results to return as JSON object.
 			Promise.all(
 				urls.map((url) => {
 					return verifyURL(url)
-						.then((url) => { upload(url, url); }); // naming convention will likely need to change for multi-users
+						// TODO: Check pre-existence of file
+						.then((url) => { upload(url); });
 				})
 			)
 				// TODO: Change status IDs depending on error/s from Promises.
+				// 		Promise failure here is rudimentary - need to handle mixed results.
 				.then(res.status(202).json)
 				.catch(res.status(400).json);
 			break;
 		case 'GET':
-			getImage(req, res);
+			getImage(fileName, req.get('content-type'))
+				.then(res.status(202).json)
+				.catch(res.status(400).json);
 			break;
 	}
 };

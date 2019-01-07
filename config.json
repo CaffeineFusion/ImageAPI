@@ -2,8 +2,12 @@
 	"project_id":"307972859230",
 	"bucket_name":"image_api_307972859230",
 	"keys": {
+		"path":"./keys",
 		"cloud_storage": {
 			"path":"./keys/cloudStorage.json"
+		},
+		"cloud_functions": {
+			"path":"./keys/functions.json"
 		}
 	}
 }

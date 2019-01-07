@@ -6,8 +6,8 @@ The base use case is the ability to upload remote images into a cloud storage bu
 (Note: some providers have resizing capabilities inbuilt [eg. GCP], this project will examine other methods to implement the same)
 
 ## API Requirements
-- Upload Images via URI
-- Download Images
+- Upload Images via URL
+- Download Images / provide Signed URL
 - Resize Images
 - 80 day expiry
 
@@ -23,6 +23,8 @@ The base use case is the ability to upload remote images into a cloud storage bu
 2. Add Project_ID to config.json
 TODO: add script to deploy.sh to add Project_ID to bucket name
 
+### Service Accounts
+
 ## Leads
 Consider spinning up app in Firebase
 Resumable file uploads: https://cloud.google.com/storage/docs/json_api/v1/how-tos/resumable-upload
@@ -35,7 +37,8 @@ Pub/Sub: https://github.com/googleapis/nodejs-pubsub/
 ## TODO
 - Filetype verification
 - Partitioned file uploads
-
+- Caching
+	- Match Catch expiry to Bucket item expiration
 
 ## Architecture
 The API endpoint footprint is small and doesn't need to maintain any state. This makes it a prime candidate for Lamba-style webhooks. (Benefits: Auto-scaling, minimal upkeep, smaller code footprint etc.)  
