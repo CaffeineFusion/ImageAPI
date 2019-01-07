@@ -42,8 +42,7 @@ function uploadByURL(url, bucket, fileName) {
 		request(url)
 			.on('response', (response) => { response.pause(); resolve(response); })	// Create, then pause and return the stream
 			.on('error', (reject));
-	})
-		.then((response) => { return response.pipe(file.createWriteStream({ gzip: true })); })
+	}).then((response) => { return response.pipe(file.createWriteStream({ gzip: true })); })
 		.catch((error) => { return { error }; }); // TODO: Add more detailed error handling. - statusCode etc.
 }
 
@@ -56,6 +55,7 @@ function upload(url, fileName) {
  * TODO: refactor to adapt based on content-type
  */
 function getImage(req, res) {
+
 	res.status(200).send();
 }
 

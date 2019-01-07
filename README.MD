@@ -32,10 +32,9 @@ Firebase approach to uploads: https://firebase.google.com/docs/storage/web/uploa
 Pub/Sub: https://github.com/googleapis/nodejs-pubsub/
 
 
-## Questions
-- How will client be informed of workerised file upload failure? Web Socket?  
-- How do we provide information on file before it has been fully uploaded to the server?
-- How to verify correct filetype?
+## TODO
+- Filetype verification
+- Partitioned file uploads
 
 
 ## Architecture
