@@ -2,12 +2,12 @@
 
 const request = require('request');
 
-const config = require('./../config.json');
+const config = require('./../../config.json');
 
 const {Storage} = require('@google-cloud/storage');
 const storage = new Storage({
 	projectId: config.project_id,
-	keyFilename: './../keys/cloudStorage.json'
+	keyFilename: './keys/cloudStorage.json'
 });
 
 // Returns a Promise object which resolves to a stream.
@@ -20,5 +20,5 @@ function uploadByURL(url, bucket, fileName) {
 }
 
 exports.upload = function (url, fileName) {
-	return uploadByURL(url, storage.bucket, fileName);
+	return uploadByURL(url, storage.bucket(config.bucket_name), fileName);
 };
