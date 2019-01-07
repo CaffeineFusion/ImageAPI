@@ -12,43 +12,25 @@ const storage = new Storage({
 	keyFilename: config.keys.cloud_storage.path
 });
 
-function parseURL(urlString) {
-	try {
-		return url.parse(urlString);
-	}
-	catch(e) {
-		// TODO
-	}
-}
-
-function checkURLStatus(url) {
+/**
+ * verifyURL - confirm that the URL can be reached.
+ * @param  {string} url
+ * @return {Promise}    Promise resolves to the url or rejects with a JSON object as error.
+ *
+ * TODO: Add in more specific error messages for rejection and parsing errors:: {url, error:'invalidURL', message:'URL could not be parsed. Please check that URL is valid'}
+ */
+function verifyURL(path) {
 	return new Promise((resolve, reject) => {
-		request({method: 'HEAD', url}, function (error, response) {
+		request({method: 'HEAD', url:url.parse(path)}, function (error, response) { // Availability of HEAD method not guaranteed. Refactor.
 			if(error || response.statusCode !== 200)
 				reject({url, statusCode:response.statusCode, error:error?error:'inaccessibleURL', message:'Remote URL could not be reached.'});
-			resolve(url);
+			resolve(path);
 		});
-	});
-}
-
-/**
-* verifyURL - pre-upload checks to ensure we notify client of failures prior to attempted upload.
-**/
-function verifyURL(url) {
-	return new Promise((resolve, reject) => {
-		if(!parseURL(url))
-			reject({url, error:'invalidURL', message:'URL could not be parsed. Please check that URL is valid'});
-		else {
-			checkURLStatus(url)
-				.then(resolve)
-				.catch(reject);
-		}
 	});
 }
 
 /* // Testing purposes:
 async function uploadLocalFile(bucket, fileName) {
-
 	await bucket.upload(fileName, { gzip: true });
 }
 */
@@ -69,31 +51,28 @@ function upload(url, fileName) {
 	return uploadByURL(url, storage.bucket(config.bucket_name), fileName);
 }
 
-
+/**
+ *
+ * TODO: refactor to adapt based on content-type
+ */
 function getImage(req, res) {
-	let message = req.query.message || req.body.message || 'Hello World!';
-	switch (req.get('content-type')) {
-		case 'application/JSON':
-
-			break;
-		case 'image/jpeg':
-
-			break;
-		case 'image/png':
-
-			break;
-	}
-	res.status(200).send(message);
+	res.status(200).send();
 }
 
+/*
+	switch (req.get('content-type')) {
+		case 'application/JSON':
+			break;
+		case 'image/jpeg':
+			break;
+		case 'image/png':
+			break;
+	}
+ */
 
 // Lambdas
-
 /**
  * images - /images webhook.
- * @param  {[type]} req [description]
- * @param  {[type]} res [description]
- * @return {[type]}     [description]
  */
 exports.images = (req, res) => {
 	if(!res.body.urls) res.status(400).json({error:'noURLs', message:'No URLs were provided.'});
