@@ -54,11 +54,6 @@ Two approaches could be used on POST - return a 101 status and direct the client
 ### Provider
 Note: GCP's Node 8 driver is still Beta.
 
-### Components
-2 External End Points - GET and PUT corresponding to:
-3 Lambdas - GET, PUT, and uploadImage.
-1 Data Store.
-
 ### Implementation
 #### Item Expiry
 The item expiry can be handled directly in the data bucket policy.
@@ -78,7 +73,6 @@ https://medium.com/google-cloud/uploading-resizing-and-serving-images-with-googl
 ## Implementation Notes
 ### Code/Folder Structure - gcloud deploy limitations
 The `gcloud deploy` command, unfortunately, appears to only work on a singular local index.js file (or remote repositories).
-Rather than coalescing these into a single index file, the deployment script points to the remote locations in the Github repository. (Noted the issue with the documentation on this point.)
 
 ### (Prepackaged solutions)
 Google's AppEngine provides ready made image servicing, including resizing and cropping.
