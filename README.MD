@@ -40,10 +40,13 @@ Pub/Sub: https://github.com/googleapis/nodejs-pubsub/
 
 ## Architecture
 The API endpoint footprint is small and doesn't need to maintain any state. This makes it a prime candidate for Lamba-style webhooks. (Benefits: Auto-scaling, minimal upkeep, smaller code footprint etc.)  
-User will interact with a single REST endpoint (/images) through GET and POST requests.  
+User will interact with a single REST endpoint (/images) through GET and PUT requests.  
 
+![Image API GET sequence](/screenshots/doc_assets/GET.png)  
 
-For Uploading the images, we need the POST endpoint to initiate one or more upload operations. In this case, we'll trigger one or more instances of a Lambda function. (Phase 2 could utilize a Pub/Sub service with workers consuming the upload tasks - Beyond the scope of this demo)  
+![Image API PUT sequence](/screenshots/doc_assets/PUT.png)
+
+For Uploading the images, we need the PUT endpoint to initiate one or more upload operations. In this case, we'll trigger one or more instances of a Lambda function. (Phase 2 could utilize a Pub/Sub service with workers consuming the upload tasks - Beyond the scope of this demo)  
 
 
 For real-time feedback on the upload process, we could have the client long-poll the GET status. However, because we want to have multiple image uploads of undefined size, a better approach would be to use a Web Socket where the client can be notified of status updates of each upload. This would also provide a means for real-time upload states - a chunked upload can provide %age upload completions to the client side in real-time.  
