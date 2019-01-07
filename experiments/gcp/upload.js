@@ -7,7 +7,7 @@ const config = require('./../config.json');
 const {Storage} = require('@google-cloud/storage');
 const storage = new Storage({
 	projectId: config.project_id,
-	keyFilename: './../keys/cloud_storage.json'
+	keyFilename: './../keys/cloudStorage.json'
 });
 
 // Returns a Promise object which resolves to a stream.

@@ -3,7 +3,7 @@
 	"bucket_name":"image_api_307972859230",
 	"keys": {
 		"cloud_storage": {
-			"path":"./keys/cloud_storage.json"
+			"path":"./keys/cloudStorage.json"
 		}
 	}
 }

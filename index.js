@@ -110,7 +110,14 @@ function getImage(req, res) {
 
 
 // Lambdas
-exports.image = (req, res) => {
+
+/**
+ * images - served as our /images webhook.
+ * @param  {[type]} req [description]
+ * @param  {[type]} res [description]
+ * @return {[type]}     [description]
+ */
+exports.images = (req, res) => {
 	if(!res.body.urls) res.status(400).json({error:'noURLs', message:'No URLs were provided.'});
 	let urls = res.body.urls;
 	switch(req.method) {

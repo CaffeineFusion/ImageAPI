@@ -1,4 +1,6 @@
-/** GCP example for reference **/
+/** GCP example for reference
+* https://cloud.google.com/storage/docs/uploading-objects#storage-upload-object-nodejs
+**/
 
 // Imports the Google Cloud client library
 const {Storage} = require('@google-cloud/storage');
