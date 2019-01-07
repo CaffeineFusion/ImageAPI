@@ -1,0 +1,32 @@
+{
+    "env": {
+        "node": 1,
+        "es6": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "rules": {
+        "indent": [
+            "error",
+            "tab",
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "multi-string": "on",
+        "no-console":"off",
+		"allowTemplateLiterals":true
+
+    }
+}

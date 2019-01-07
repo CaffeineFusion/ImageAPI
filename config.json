@@ -1,0 +1,9 @@
+{
+	"project_id":"307972859230",
+	"bucket_name":"image_api_307972859230",
+	"keys": {
+		"cloud_storage": {
+			"path":"./keys/cloud_storage.json"
+		}
+	}
+}
