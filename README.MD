@@ -41,9 +41,9 @@ Pub/Sub: https://github.com/googleapis/nodejs-pubsub/
 The API endpoint footprint is small and doesn't need to maintain any state. This makes it a prime candidate for Lamba-style webhooks. (Benefits: Auto-scaling, minimal upkeep, smaller code footprint etc.)  
 User will interact with a single REST endpoint (/images) through GET and PUT requests.  
 
-![Image API GET sequence](/screenshots/doc_assets/GET.png)  
+![Image API GET sequence](/doc_assets/GET.png)  
 
-![Image API PUT sequence](/screenshots/doc_assets/PUT.png)
+![Image API PUT sequence](/doc_assets/PUT.png)
 
 For Uploading the images, we need the PUT endpoint to initiate one or more upload operations. In this case, we'll trigger one or more instances of a Lambda function. (Phase 2 could utilize a Pub/Sub service with workers consuming the upload tasks - Beyond the scope of this demo)  
 
