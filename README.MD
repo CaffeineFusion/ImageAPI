@@ -48,11 +48,6 @@ User will interact with a single REST endpoint (/images) through GET and PUT req
 
 ![Image API PUT sequence](/doc_assets/PUT.png)
 
-For Uploading the images, we need the PUT endpoint to initiate one or more upload operations. In this case, we'll trigger one or more instances of a Lambda function. (Phase 2 could utilize a Pub/Sub service with workers consuming the upload tasks - Beyond the scope of this demo)  
-
-
-For real-time feedback on the upload process, we could have the client long-poll the GET status. However, because we want to have multiple image uploads of undefined size, a better approach would be to use a Web Socket where the client can be notified of status updates of each upload. This would also provide a means for real-time upload states - a chunked upload can provide %age upload completions to the client side in real-time.  
-Two approaches could be used on POST - return a 101 status and direct the client to upgrade to a Websocket. Return a 102 status
 
 ### Provider
 Note: GCP's Node 8 driver is still Beta.
@@ -63,15 +58,6 @@ The item expiry can be handled directly in the data bucket policy.
 `gsutil mb --retention 80d gs://ImageAPI`
 (For a more nuanced/extensible approach we could specify a more detailed lifecycle policy or have a lambda function launched via scheduled CRON job - eg. via cloud scheduler)
 
-#### Resizing
-
-Prepackaged Google solution:
-https://medium.com/google-cloud/uploading-resizing-and-serving-images-with-google-cloud-platform-ca9631a2c556
-
-#### Image Upload
-
-### Known limitations
-- File upload size limits ()
 
 ## Implementation Notes
 ### Code/Folder Structure - gcloud deploy limitations
@@ -80,6 +66,7 @@ The `gcloud deploy` command, unfortunately, appears to only work on a singular l
 ### (Prepackaged solutions)
 Google's AppEngine provides ready made image servicing, including resizing and cropping.
 https://cloud.google.com/appengine/docs/standard/python/refdocs/google.appengine.api.images#google.appengine.api.images.get_serving_url
+https://medium.com/google-cloud/uploading-resizing-and-serving-images-with-google-cloud-platform-ca9631a2c556
 
 ### Performance considerations
 #### HTTP Requests to Google Cloud
