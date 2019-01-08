@@ -44,11 +44,14 @@ function uploadByURL(url, bucket, fileName) {
 			.on('response', (response) => { response.pause(); resolve(response); })	// Create, then pause and return the stream
 			.on('error', (reject));
 	}).then((response) => { return response.pipe(file.createWriteStream({ gzip: true })); })
+		.then(() => { return getURL(fileName, bucket)
+			.then((result) => { return {dest:result.url, src:url}; });
+		})
 		.catch((error) => { return { error }; }); // TODO: Add more detailed error handling. - statusCode etc.
 }
 
 function upload(url) {
-	return uploadByURL(url, storage.bucket(config.bucket_name), path.basename(url));
+	return uploadByURL(url, storage.bucket(config.bucket_name), path.basename(url)); // Add UUID to filename.
 }
 
 
@@ -61,30 +64,37 @@ function getURL(fileName, bucket) {
 	return new Promise((resolve, reject) => {
 		file.getSignedUrl({action:'read', expires:'01-01-2020'}, function(err, url) {
 			if (err) reject(err);
-			else resolve(url);
+			else resolve({url});
 		});
 	});
 }
 
 function getImage(fileName, contentType) {
 	switch (contentType) {
-		case 'application/JSON':
+		case 'application/json':
 			return getURL(fileName, storage.bucket(config.bucket_name));
 		/*case 'image/jpeg':
 			break;
 		case 'image/png':
 			break;*/
 	}
+	return Promise.reject({ fileName, contentType, message:`ImageAPI does not currently accept ${contentType}. Please use json.` });
 }
 
 /**
  * images - /images webhook.
  */
 exports.images = (req, res) => {
-	if(req.method == 'PUT' && !req.body.urls) res.status(400).json({error:'noURLs', message:'No URLs were provided.'});
-	if(req.method == 'GET' && !req.body.filename) res.status(400).json({error:'noImageName', message:'No Image Name was provided'});
+	if(req.method == 'PUT' && !req.body.urls) {
+		res.status(400).json({error:'noURLs', message:'No URLs were provided.'});
+		return;
+	}
+	if(req.method == 'GET' && !req.query.name) {
+		res.status(400).json({error:'noImageName', message:'No Image Name was provided'});
+		return;
+	}
 	let urls = req.body.urls;
-	let fileName = req.body.filename;
+	let fileName = req.query.name;
 
 	switch(req.method) {
 		case 'PUT':
@@ -93,18 +103,18 @@ exports.images = (req, res) => {
 				urls.map((url) => {
 					return verifyURL(url)
 						// TODO: Check pre-existence of file
-						.then((url) => { upload(url); });
+						.then(upload);
 				})
 			)
 				// TODO: Change status IDs depending on error/s from Promises.
 				// 		Promise failure here is rudimentary - need to handle mixed results.
-				.then(res.status(202).json)
-				.catch(res.status(400).json);
+				.then((result) => {	return res.status(202).json(result); })
+				.catch((err) => { return res.status(400).json(err); });
 			break;
 		case 'GET':
 			getImage(fileName, req.get('content-type'))
-				.then(res.status(202).json)
-				.catch(res.status(400).json);
+				.then((result) => {	return res.status(202).json(result); })
+				.catch((err) => { return res.status(400).json(err); });
 			break;
 	}
 };
