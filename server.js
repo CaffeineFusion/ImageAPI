@@ -1,3 +1,10 @@
+'use strict';
+/**
+ * This web server is only intended for local testing.
+ * index.js intended to be deployed as a cloud lambda function.
+ **/
+
+
 const express  = require('express');
 const helmet   = require('helmet');
 
