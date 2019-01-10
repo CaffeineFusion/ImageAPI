@@ -88,9 +88,12 @@ function getImage(fileName, contentType) {
 
 /**
  * images - /images webhook.
+ * 		GET:  Take imageID as parameter and return resource. Permitted contentTypes: 'application/json'.
+ * 		POST: Take an array of urls as payload to upload. Returns array of objects [[dest: signedURL, src: url]].
+ * 		PUT:  Take imageID + url [TODO]
  */
 exports.images = (req, res) => {
-	if(req.method == 'PUT' && !req.body.urls) {
+	if(req.method == 'POST' && !req.body.urls) {
 		res.status(400).json({error:'noURLs', message:'No URLs were provided.'});
 		return;
 	}
@@ -102,7 +105,7 @@ exports.images = (req, res) => {
 	let id = req.params.imageID;
 
 	switch(req.method) {
-		case 'PUT':
+		case 'POST':
 			// For each URL, verify, upload it, then aggregate the results to return as JSON object.
 			Promise.all(
 				urls.map((url) => {
