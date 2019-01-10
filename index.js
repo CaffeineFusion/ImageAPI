@@ -2,7 +2,9 @@
 const url = require('url');
 //const uuid = require('uuidv4');
 const request = require('request');
-const path = require('path');
+//const path = require('path');
+// const uuidv5 = require('uuid/v5'); // Switch to v5 utilizing hashed user_id and filename
+const uuidv4 = require('uuid/v4');
 //const rp = require('request-promise');
 
 const config = require('./config.json');
@@ -51,7 +53,7 @@ function uploadByURL(url, bucket, fileName) {
 }
 
 function upload(url) {
-	return uploadByURL(url, storage.bucket(config.bucket_name), path.basename(url)); // Add UUID to filename.
+	return uploadByURL(url, storage.bucket(config.bucket_name), uuidv4());
 }
 
 
@@ -76,6 +78,9 @@ function getImage(fileName, contentType) {
 		/*case 'image/jpeg':
 			break;
 		case 'image/png':
+			break;
+		case 'arrayBuffer':
+			// res.attachment('x.jpg'); stream.pipe(res);
 			break;*/
 	}
 	return Promise.reject({ fileName, contentType, message:`ImageAPI does not currently accept ${contentType}. Please use json.` });
@@ -89,12 +94,12 @@ exports.images = (req, res) => {
 		res.status(400).json({error:'noURLs', message:'No URLs were provided.'});
 		return;
 	}
-	if(req.method == 'GET' && !req.query.name) {
-		res.status(400).json({error:'noImageName', message:'No Image Name was provided'});
+	if(req.method == 'GET' && !req.params.imageID) {
+		res.status(400).json({error:'noImageID', message:'No Image ID was provided'});
 		return;
 	}
 	let urls = req.body.urls;
-	let fileName = req.query.name;
+	let id = req.params.imageID;
 
 	switch(req.method) {
 		case 'PUT':
@@ -112,7 +117,7 @@ exports.images = (req, res) => {
 				.catch((err) => { return res.status(400).json(err); });
 			break;
 		case 'GET':
-			getImage(fileName, req.get('content-type'))
+			getImage(id, req.get('content-type'))
 				.then((result) => {	return res.status(202).json(result); })
 				.catch((err) => { return res.status(400).json(err); });
 			break;

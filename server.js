@@ -29,7 +29,15 @@ app.use(bodyParser.json());
 //app.use('/v1', chat);
 //app.use('/', index);
 
-app.get('/images', function(req, res) {
+app.get('/images/:imageID', function(req, res) {
+	index.images(req, res);
+});
+
+app.put('/images/:imageID', function(req, res) {
+	index.images(req, res);
+});
+
+app.post('/images', function(req, res) {
 	index.images(req, res);
 });
 
