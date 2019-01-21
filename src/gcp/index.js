@@ -104,13 +104,13 @@ exports.images = (req, res) => {
 	let urls = req.body.urls;
 	let id = req.params.imageID;
 
+	// TODO: implement integrate res.type('...');
 	switch(req.method) {
 		case 'POST':
 			// For each URL, verify, upload it, then aggregate the results to return as JSON object.
 			Promise.all(
 				urls.map((url) => {
 					return verifyURL(url)
-						// TODO: Check pre-existence of file
 						.then(upload);
 				})
 			)

@@ -15,7 +15,10 @@ const bodyParser = require('body-parser');
 //require('dotenv').config({silent:true}) // Switch to Env loading of config?
 
 // Require Route Modules
-const index     = require(__dirname + '/index.js');
+const index     = require(__dirname + '/experiments/gcp/index.js');
+//const index     = require(__dirname + '/experiments/bluemix/index.js');
+//const index     = require(__dirname + '/experiments/gcp/index.js');
+//const index     = require(__dirname + '/experiments/gcp/index.js');
 
 const PORT = 8080;
 
