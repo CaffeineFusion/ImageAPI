@@ -40,7 +40,7 @@ Azure - *Future*
 AWS - *Future*
 
 ### Phase X   
-- Websockets for large uploads
+- Websockets for polling status of large uploads
 - Security - OAuth + jwt
 - Reporting + External logging
 - Data Stream + Analytics
