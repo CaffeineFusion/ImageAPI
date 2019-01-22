@@ -13,25 +13,22 @@ let storage = new Storage.S3(config);
 
 // Returns a Promise object which resolves to a stream.
 function uploadByURL(url, bucket, fileName) {
-	return storage.putObject({
-
-	}).promise();
-
-	let file = bucket.file(fileName);
+	//let file = bucket.file(fileName);
 	return new Promise((resolve, reject) => {
 		request(url)
 			.on('response', (response) => { response.pause(); resolve(response); })
 			.on('error', (reject));
-		//.on('finish', ());
-	}).then((response) => { return response.pipe(file.createWriteStream({ gzip: true })); }) // TODO: Restructure.
+	}).then((response) => {
+		return storage.putObject({ Bucket:bucket, Key:fileName, Body:response })
+			.promise();
+	}) 
 		.catch((error) => { return { error }; }); // TODO: Add more detailed error handling. - statusCode etc.
 }
-// TODO: file.createResumableUpload
 
 exports.upload = function (url) {
 	return uploadByURL(url, storage.bucket(config.bucket_name), path.basename(url));
 };
-
+/*
 function createTextFile(bucketName, itemName, fileText) {
     console.log(`Creating new item: ${itemName}`);
     return cos.putObject({
@@ -46,6 +43,7 @@ function createTextFile(bucketName, itemName, fileText) {
         console.error(`ERROR: ${e.code} - ${e.message}\n`);
     });
 }
+*/
 
 /**
  *

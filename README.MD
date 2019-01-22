@@ -49,3 +49,4 @@ AWS - *Future*
 - Subscription based upload workers
 - Swap from proprietary libraries to base http
 - Leverage relevant CDNs to improve download performance
+- Parallel multi-part uploads (https://www.npmjs.com/package/s3)

@@ -1,3 +1,7 @@
 samples
 node_modules
 keys
+src/gcp/keys
+src/bluemix/keys
+src/azure/keys
+src/aws/keys

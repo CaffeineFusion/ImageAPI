@@ -19,9 +19,12 @@ The base use case is the ability to upload remote images into a cloud storage bu
 - Resilience []
 
 ## Setup
-1. Create Project.
-2. Add Project_ID to config.json
+1. Create Project and add Project_ID to config.json   
+2. Create a service account with access to upload Google Functions and save the key in keys/gcp_functions.json   
+3. Create Bucket in Google Cloud Storage and update bucket_name in config.json  
+4. Create a service account with write permissions to your google storage bucket and save the key in keys/gcp_storage.json  
 TODO: add script to deploy.sh to add Project_ID to bucket name
+
 
 ### Service Accounts
 

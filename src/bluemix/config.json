@@ -4,10 +4,10 @@
 	"keys": {
 		"path":"./keys",
 		"cloud_storage": {
-			"path":"./keys/gcp_storage.json"
+			"path":"./../../keys/cloudStorage.json"
 		},
 		"cloud_functions": {
-			"path":"./keys/gcp_functions.json"
+			"path":"./../../keys/functions.json"
 		}
 	}
 }
