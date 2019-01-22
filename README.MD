@@ -1,6 +1,6 @@
 # ImageAPI
-This project is experimenting with different providers of cloud based web hooks and storage.  
-[Note: This is in the very early stages of the experimentation and is not currently functional. The specs and approach may change without any notice.]  
+This project is experimenting with different providers of cloud based web hooks and storage.
+Please see the Phases below to see the completion rates for various providers.
 
 The base use case is the ability to upload remote images into a cloud storage bucket as well as to retrieve and resize them.
 (Note: some providers have resizing capabilities inbuilt [eg. GCP], this project will examine other methods to implement the same)
@@ -26,13 +26,17 @@ User will interact with a single REST endpoint (/images) through GET and PUT req
 
 ![Image API PUT sequence](/doc_assets/PUT.png)
 
-## Providers - Development State
-### Phase 1 Complete - Upload, Download
-- GCP - Google Cloud Platform
+## Phases
+### Phase 1
+The goal of Phase 1 is to put together a basic upload/download API. It should be able to concurrently stream upload from a remote url. It should be able to provide both a stream download directly and a url-based access point.
 
-### Phase 1 In Progress
-- Bluemix - IBM Cloud
+GCP - *Complete*    
+Bluemix - *In Progress*    
+Azure - *Future*   
+AWS - *Future*
 
-### Future
-- Azure
-- AWS
+### Phase X
+Websockets for large uploads
+Security - OAuth + jwt
+Reporting + External logging
+Data Stream + Analytics
