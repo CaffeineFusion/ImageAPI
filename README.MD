@@ -44,3 +44,8 @@ AWS - *Future*
 - Security - OAuth + jwt
 - Reporting + External logging
 - Data Stream + Analytics
+- Auto deployment scripts
+- Multi-Part Uploads
+- Subscription based upload workers
+- Swap from proprietary libraries to base http
+- Leverage relevant CDNs to improve download performance

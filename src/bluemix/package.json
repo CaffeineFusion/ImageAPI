@@ -1,6 +1,6 @@
 {
-	"name": "imageapi-gcp",
-	"version": "1.0.0",
+	"name": "imageapi-bluemix",
+	"version": "0.0.1",
 	"description": "ImageAPI built using lambda webhooks",
 	"main": "index.js",
 	"scripts": {
@@ -18,7 +18,7 @@
 	"author": "Owen Smith",
 	"license": "MIT",
 	"dependencies": {
-		"@google-cloud/storage": "^2.3.4",
+		"ibm-cos-sdk": "^1.4.1",
 		"request": "^2.88.0",
 		"uuidv4": "^2.0.0"
 	},
