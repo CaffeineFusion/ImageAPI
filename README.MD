@@ -27,8 +27,11 @@ User will interact with a single REST endpoint (/images) through GET and PUT req
 ![Image API PUT sequence](/doc_assets/PUT.png)
 
 <a name="phases"/>
-## Phases
-### Phase 1
+
+## Phases   
+   
+### Phase 1   
+
 The goal of Phase 1 is to put together a basic upload/download API. It should be able to concurrently stream upload from a remote url. It should be able to provide both a stream download directly and a url-based access point.
 
 GCP - *Complete*    
@@ -36,7 +39,7 @@ Bluemix - *In Progress*
 Azure - *Future*   
 AWS - *Future*
 
-### Phase X
+### Phase X   
 Websockets for large uploads
 Security - OAuth + jwt
 Reporting + External logging
