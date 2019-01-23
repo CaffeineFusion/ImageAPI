@@ -21,7 +21,7 @@ let storage = new Storage.S3(s3Config);
 function getURL(fileName, bucketName) {
 	let params = { Bucket: bucketName, Key: fileName, Expires: 600 };
 	return new Promise((resolve, reject) => {
-		storage.getSignedUrl('getObject', params, function(err, url) {
+		storage.getSignedUrl('getObject', params, function(err, url) { // Doesn't work with SigV4 :(
 			if (err) reject(err);
 			else resolve(url);
 		});

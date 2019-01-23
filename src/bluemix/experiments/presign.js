@@ -2,6 +2,9 @@
 
 // Initial template modifier from https://console.bluemix.net/docs/services/cloud-object-storage/hmac/presigned-urls.html#create-a-presigned-url
 
+// I've been searching around for a server-side presigning service similar to GCP,
+// at the moment it appears you need to use this client side code base, or an older version of signing (ie. not SigV4)
+
 const crypto = require('crypto');
 const moment = require('moment');
 const https = require('https');
@@ -12,48 +15,50 @@ const key = require('./../keys/ibm_storage.json');
 const accessKey = key.cos_hmac_keys.access_key_id;
 const secretKey = key.cos_hmac_keys.secret_access_key;
 const httpMethod = 'GET';
-const host = '{endpoint}';
-const region = '';
+const host = 's3.au-syd.cloud-object-storage.appdomain.cloud';
+const region = 'au-syd';
 const endpoint = 'https://' + host;
+
 const bucket = 'example-bucket';
-const objectKey = 'example-object'
-const expiration = 86400  // time in seconds
+const objectKey = 'example-object';
+
+const expiration = 86400;  // time in seconds
 
 // hashing and signing methods
 function hash(key, msg) {
-    var hmac = crypto.createHmac('sha256', key);
-    hmac.update(msg, 'utf8');
-    return hmac.digest();
+	let hmac = crypto.createHmac('sha256', key);
+	hmac.update(msg, 'utf8');
+	return hmac.digest();
 }
 
 function hmacHex(key, msg) {
-    var hmac = crypto.createHmac('sha256', key);
-    hmac.update(msg, 'utf8');
-    return hmac.digest('hex');
+	let hmac = crypto.createHmac('sha256', key);
+	hmac.update(msg, 'utf8');
+	return hmac.digest('hex');
 }
 
 function hashHex(msg) {
-    var hash = crypto.createHash('sha256');
-    hash.update(msg);
-    return hash.digest('hex');
+	let hash = crypto.createHash('sha256');
+	hash.update(msg);
+	return hash.digest('hex');
 }
 
 // region is a wildcard value that takes the place of the AWS region value
 // as COS doesn't use the same conventions for regions, this parameter can accept any string
 function createSignatureKey(key, datestamp, region, service) {
-    keyDate = hash(('AWS4' + key), datestamp);
-    keyString = hash(keyDate, region);
-    keyService = hash(keyString, service);
-    keySigning = hash(keyService, 'aws4_request');
-    return keySigning;
+	keyDate = hash(('AWS4' + key), datestamp);
+	keyString = hash(keyDate, region);
+	keyService = hash(keyString, service);
+	keySigning = hash(keyService, 'aws4_request');
+	return keySigning;
 }
 
 function createHexSignatureKey(key, datestamp, region, service) {
-    keyDate = hashHex(('AWS4' + key), datestamp);
-    keyString = hashHex(keyDate, region);
-    keyService = hashHex(keyString, service);
-    keySigning = hashHex(keyService, 'aws4_request');
-    return keySigning;
+	keyDate = hashHex(('AWS4' + key), datestamp);
+	keyString = hashHex(keyDate, region);
+	keyService = hashHex(keyString, service);
+	keySigning = hashHex(keyService, 'aws4_request');
+	return keySigning;
 }
 
 function printDebug() {
@@ -152,13 +157,13 @@ console.log(`\nSending ${httpMethod} request to IBM COS -----------------------`
 console.log('Request URL = ' + requestUrl);
 
 var request = https.get(requestUrl, function (response) {
-    console.log('\nResponse from IBM COS ----------------------------------');
-    console.log(`Response code: ${response.statusCode}\n`);
+	console.log('\nResponse from IBM COS ----------------------------------');
+	console.log(`Response code: ${response.statusCode}\n`);
 
-    response.on('data', function (chunk) {
-        console.log('Response: ' + chunk);
-        printDebug();
-    });
+	response.on('data', function (chunk) {
+		console.log('Response: ' + chunk);
+		printDebug();
+	});
 });
 
 request.end();
