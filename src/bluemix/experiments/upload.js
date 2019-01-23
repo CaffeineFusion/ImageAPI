@@ -7,43 +7,34 @@ const request = require('request');
 const path = require('path');
 const Storage = require('ibm-cos-sdk');
 
-const config = require('./../../keys/ibm_storage.json');
+const config = require('./../config.json');
+const key = require('./../keys/ibm_storage.json');
 
-let storage = new Storage.S3(config);
+const s3Config = {
+	endpoint: 's3.au-syd.cloud-object-storage.appdomain.cloud',
+	apiKeyId: key.apikey,
+	ibmAuthEndpoint: 'https://iam.ng.bluemix.net/oidc/token',
+	serviceInstanceId: key.resource_instance_id,
+};
+
+let storage = new Storage.S3(s3Config);
 
 // Returns a Promise object which resolves to a stream.
 function uploadByURL(url, bucket, fileName) {
-	//let file = bucket.file(fileName);
 	return new Promise((resolve, reject) => {
 		request(url)
 			.on('response', (response) => { response.pause(); resolve(response); })
 			.on('error', (reject));
 	}).then((response) => {
-		return storage.putObject({ Bucket:bucket, Key:fileName, Body:response })
+		return storage.upload({ Bucket:bucket, Key:fileName, Body:response }) //putObject did not work for streams due to Sigv4
 			.promise();
-	}) 
+	})
 		.catch((error) => { return { error }; }); // TODO: Add more detailed error handling. - statusCode etc.
 }
 
 exports.upload = function (url) {
-	return uploadByURL(url, storage.bucket(config.bucket_name), path.basename(url));
+	return uploadByURL(url, config.bucket_name, path.basename(url));
 };
-/*
-function createTextFile(bucketName, itemName, fileText) {
-    console.log(`Creating new item: ${itemName}`);
-    return cos.putObject({
-        Bucket: bucketName,
-        Key: itemName,
-        Body: fileText
-    }).promise()
-    .then(() => {
-        console.log(`Item: ${itemName} created!`);
-    })
-    .catch((e) => {
-        console.error(`ERROR: ${e.code} - ${e.message}\n`);
-    });
-}
-*/
 
 /**
  *

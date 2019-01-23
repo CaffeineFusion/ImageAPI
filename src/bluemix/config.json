@@ -1,13 +1,13 @@
 {
-	"project_id":"307972859230",
-	"bucket_name":"image_api_307972859230",
+	"bucket_name":"image-api",
+	"public_endpoint":"s3.au-syd.cloud-object-storage.appdomain.cloud",
 	"keys": {
 		"path":"./keys",
 		"cloud_storage": {
-			"path":"./../../keys/cloudStorage.json"
+			"path":"./keys/ibm_storage.json"
 		},
 		"cloud_functions": {
-			"path":"./../../keys/functions.json"
+			"path":"./keys/ibm_functions.json"
 		}
 	}
 }
