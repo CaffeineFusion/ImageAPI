@@ -1,8 +1,5 @@
 'use strict';
 
-//https://github.com/IBM-Cloud/node-file-upload-S3/blob/master/server.js
-//https://github.com/balderdashy/skipper-s3/blob/master/index.js
-
 const request = require('request');
 const path = require('path');
 const Storage = require('ibm-cos-sdk');
@@ -73,4 +70,9 @@ exports.upload = function (url) {
   });//œ
 
 }//ƒ
+
+//for future exploration:
+
+//https://github.com/IBM-Cloud/node-file-upload-S3/blob/master/server.js
+//https://github.com/balderdashy/skipper-s3/blob/master/index.js
  */
